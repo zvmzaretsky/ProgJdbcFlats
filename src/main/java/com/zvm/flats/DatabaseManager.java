@@ -49,8 +49,24 @@ public class DatabaseManager {
         if (rooms != null) query.append(" WHERE rooms=").append(rooms);
         if (price != null) query.append(" WHERE price=").append(price);
 
-        try (Statement statement = connection.prepareStatement(query.toString())) {
+        try (PreparedStatement statement = connection.prepareStatement(query.toString())) {
 
+            try (ResultSet rs = statement.executeQuery()) {
+
+                ResultSetMetaData md = rs.getMetaData();
+
+                for (int i = 1; i <= md.getColumnCount(); i++) {
+                    System.out.print(md.getColumnName(i) + "\t\t");
+                }
+                System.out.println();
+
+                while (rs.next()) {
+                    for (int i = 1; i <= md.getColumnCount(); i++) {
+                        System.out.print(rs.getString(i) + "\t\t");
+                    }
+                    System.out.println();
+                }
+            }
         }
     }
 }
